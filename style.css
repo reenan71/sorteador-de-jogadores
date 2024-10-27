@@ -17,7 +17,7 @@ input, button {
     margin: 5px;
     font-size: 16px;
     border-radius: 8px;
-    width: 90%
+    width: 90%; /* Mantido em 90% para ocupar bem o espaço */
 }
 
 button {
@@ -30,8 +30,10 @@ button {
 button:hover {
     background-color: #0056b3;
 }
-.form-container{
-    width: 500px;
+
+.form-container {
+    width: 90%; /* Ajustado para 90% para telas pequenas */
+    max-width: 500px; /* Limite superior para não esticar demais */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -44,9 +46,7 @@ button:hover {
     gap: 10px;
     margin-top: 10px;
     width: 100%;
-    max-width: 600px;
 }
-
 
 ul {
     list-style-type: none;
@@ -65,7 +65,6 @@ li {
     align-items: center;
     border-radius: 8px;
 }
-
 
 .button-group {
     display: flex;
@@ -103,16 +102,20 @@ li {
     min-width: 100px; 
 }
 
-
 @media (max-width: 600px) {
     input, button {
-        width: 100%;
-        margin: 5px 0;
+        width: 100%; /* Manter os botões em 100% da largura disponível */
+        margin: 5px 0; /* Margem uniforme para campos de entrada e botões */
+    }
+
+    .form-container {
+        width: 90%; /* Ajuste a largura da form-container */
     }
 
     .button-container {
-        gap: 5px;
+        gap: 5px; /* Menor espaçamento em dispositivos menores */
     }
+
     .button-container button {
         font-size: 14px; 
         padding: 8px;    
@@ -123,7 +126,8 @@ li {
         font-size: 14px;
     }
 
-    .button-group button{
-        font-size: 14px
+    .button-group button {
+        font-size: 14px;
+        flex: 1; /* Ajustar para que os botões da button-group também se expandam */
     }
 }
