@@ -81,7 +81,7 @@ li {
 
 #teams {
     margin-top: 20px;
-    width: 90%;
+    width: 100%;
     max-width: 400px;
 }
 
@@ -93,6 +93,7 @@ li {
     background-color: white;
     padding: 5px;
     border: 1px solid #ddd;
+    border-radius: 8px
 }
 
 .button-container button {
