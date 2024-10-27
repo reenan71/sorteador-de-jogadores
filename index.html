@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Sorteador de Jogadores</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Sorteador de Jogadores</h1>
+        <input type="text" id="playerName" placeholder="Nome do jogador">
+        
+        <!-- Contêiner para alinhar os botões -->
+        <div class="button-container">
+            <button onclick="addPlayer()">Adicionar Jogador</button>
+            <button onclick="sortPlayers()">Sortear Times</button>
+        </div>
+    </div>
+    <ul id="playerList"></ul>
+    <div id="teams"></div>
+    <script src="script.js"></script>
+</body>
+</html>
