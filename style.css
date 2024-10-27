@@ -81,8 +81,8 @@ li {
 
 #teams {
     margin-top: 20px;
-    width: 100%;
-    max-width: 600px;
+    width: 90%;
+    max-width: 400px;
 }
 
 #teams h2 {
@@ -129,5 +129,10 @@ li {
     .button-group button {
         font-size: 14px;
         flex: 1; /* Ajustar para que os botões da button-group também se expandam */
+    }
+
+    #teams {
+        width: 95%; /* Ajusta a largura do contêiner de times para telas pequenas */
+        max-width: none; /* Remove o limite máximo em telas pequenas */
     }
 }
