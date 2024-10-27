@@ -91,7 +91,7 @@ li {
 
 #teams ul {
     background-color: white;
-    padding: 10px;
+    padding: 5px;
     border: 1px solid #ddd;
 }
 
@@ -104,16 +104,16 @@ li {
 
 @media (max-width: 600px) {
     input, button {
-        width: 100%; /* Manter os botões em 100% da largura disponível */
-        margin: 5px 0; /* Margem uniforme para campos de entrada e botões */
+        width: 100%; 
+        margin: 5px 0; 
     }
 
     .form-container {
-        width: 90%; /* Ajuste a largura da form-container */
+        width: 90%; 
     }
 
     .button-container {
-        gap: 5px; /* Menor espaçamento em dispositivos menores */
+        gap: 5px; 
     }
 
     .button-container button {
@@ -128,11 +128,7 @@ li {
 
     .button-group button {
         font-size: 14px;
-        flex: 1; /* Ajustar para que os botões da button-group também se expandam */
+        flex: 1; 
     }
 
-    #teams {
-        width: 95%; /* Ajusta a largura do contêiner de times para telas pequenas */
-        max-width: none; /* Remove o limite máximo em telas pequenas */
-    }
 }
