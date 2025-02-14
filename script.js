@@ -73,6 +73,19 @@ function sortPlayers() {
 
     displayTeams(teams);
 }
+function sortPlayersFutSeven() {
+    if (players.length < 2) {
+        alert('Adicione pelo menos dois jogadores.');
+        return;
+    }
+    const shuffledPlayers = [...players].sort(() => 0.5 - Math.random());
+    const teams = [];
+    while (shuffledPlayers.length) {
+        teams.push(shuffledPlayers.splice(0, 6));
+    }
+
+    displayTeams(teams);
+}
 
 function displayTeams(teams) {
     const teamsDiv = document.getElementById('teams');
