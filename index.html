@@ -1,25 +1,90 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorteador de Jogadores</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TimeCerto - O sorteador para sua pelada</title>
+<link rel="stylesheet" href="style.css">
+
 </head>
 <body>
-    <div class="form-container">
-        <h1>Sorteador de Jogadores</h1>
-        <input type="text" id="playerName" placeholder="Nome do jogador">
-        
-        <!-- Contêiner para alinhar os botões -->
-        <div class="button-container">
-            <button onclick="addPlayer()">Adicionar Jogador</button>
-            <button onclick="sortPlayers()">Sortear Times</button>
-            <button onclick="sortPlayersFutSeven()">Sortear Times Fut7</button>
-        </div>
+
+<h1>⚽️ TimeCerto 🏆</h1>
+<p class="apresentacao" style="font-size: 1.2rem; color: #333; max-width: 600px; margin-bottom: 2rem;">
+  O seu sorteador fácil e rápido para formar times equilibrados e animar sua pelada!
+  Adicione os jogadores, escolha o tamanho do time e deixe o TimeCerto fazer a magia.
+</p>
+
+<div class="container-principal" >
+    <div>
+  <label for="playerName">Nome do Jogador:</label>
+  <input type="text" id="playerName" placeholder="Ex: João" />
+
+  <label for="playerPosition">Posição:</label>
+  <select id="playerPosition">
+    <option value="goleiro">Goleiro</option>
+    <option value="zagueiro">Zagueiro</option>
+    <option value="ala">Ala</option>
+    <option value="meio">Meio</option>
+    <option value="ataque">Ataque</option>
+  </select>
+
+  <button class="btn-add action-button" onclick="addPlayer()">Adicionar Jogador</button>
+</div>
+
+<hr />
+
+<div>
+  <label for="teamSize">Tamanho do time:</label>
+  <input type="number" id="teamSize" min="2" max="11" value="7" />
+  <button class="btn-add action-button" onclick="sortPlayersGeneric(Number(document.getElementById('teamSize').value))">
+    Sortear Times
+  </button>
+</div>
+
+<div>
+    
+</div>
+<h2>Lista de Jogadores</h2>
+<ul id="playerList"></ul>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+  <h2 style="margin: 0;">Times Sorteados</h2>
+  <button onclick="copiarTimesWhatsApp()" class="action-button btn-copy">
+    📋 Copiar para WhatsApp
+  </button>
+</div>
+
+<div id="teams"></div>
+
+
+
+
+<!-- Modal edição -->
+<div id="modalEdit" class="modal-overlay">
+  <div class="modal">
+    <h3>Editar Jogador</h3>
+    <label for="editName">Nome:</label>
+    <input type="text" id="editName" />
+    <label for="editPosition">Posição:</label>
+    <select id="editPosition">
+      <option value="goleiro">Goleiro</option>
+      <option value="zagueiro">Zagueiro</option>
+      <option value="ala">Ala</option>
+      <option value="meio">Meio</option>
+      <option value="ataque">Ataque</option>
+    </select>
+    <div class="modal-buttons">
+      <button class="btn-danger action-button" onclick="closeModal()">Cancelar</button>
+      <button class="action-button btn-add" onclick="saveEdit()">Salvar</button>
     </div>
-    <ul id="playerList"></ul>
-    <div id="teams"></div>
-    <script src="script.js"></script>
+  </div>
+</div>
+
+</div>
+
+<script src="script.js"></script>
+<div id="toast" class="toast">Copiado para a área de transferência! ✅</div>
+
 </body>
 </html>
