@@ -3,10 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="icon" type="image/png" sizes="32x32" href="image/android-chrome-192x192.png">
-<title> TimeCerto - O sorteador para sua pelada</title>
-<link rel="stylesheet" href="style.css">
-
+<title>TimeCerto - O sorteador para sua pelada</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -16,8 +14,7 @@
   Adicione os jogadores, escolha o tamanho do time e deixe o TimeCerto fazer a magia.
 </p>
 
-<div class="container-principal" >
-    <div>
+<div class="container-principal">
   <label for="playerName">Nome do Jogador:</label>
   <input type="text" id="playerName" placeholder="Ex: João" />
 
@@ -30,62 +27,27 @@
     <option value="ataque">Ataque</option>
   </select>
 
-  <button class="btn-add action-button" id="btnAddPlayer">Adicionar Jogador</button>
-</div>
+  <button id="btnAddPlayer" class="btn-add action-button">Adicionar Jogador</button>
 
-<hr />
+  <hr />
 
-<div>
   <label for="teamSize">Tamanho do time:</label>
   <input type="number" id="teamSize" min="2" max="11" value="7" />
-  <button class="btn-add action-button" id="btnSortTeams">
-    Sortear Times
-  </button>
-</div>
+  <button id="btnSortTeams" class="btn-add action-button">Sortear Times</button>
 
-<div>
-    
-</div>
-<h2>Lista de Jogadores</h2>
-<ul id="playerList"></ul>
+  <h2>Lista de Jogadores</h2>
+  <ul id="playerList"></ul>
 
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-  <h2 style="margin: 0;">Times Sorteados</h2>
-  <button id="btnCopyWhatsApp" class="action-button btn-copy">
-    📋 Copiar para WhatsApp
-  </button>
-</div>
-
-<div id="teams"></div>
-
-
-
-
-<!-- Modal edição -->
-<div id="modalEdit" class="modal-overlay">
-  <div class="modal">
-    <h3>Editar Jogador</h3>
-    <label for="editName">Nome:</label>
-    <input type="text" id="editName" />
-    <label for="editPosition">Posição:</label>
-    <select id="editPosition">
-      <option value="goleiro">Goleiro</option>
-      <option value="zagueiro">Zagueiro</option>
-      <option value="ala">Ala</option>
-      <option value="meio">Meio</option>
-      <option value="ataque">Ataque</option>
-    </select>
-    <div class="modal-buttons">
-      <button class="btn-danger action-button" id="btnCloseModal">Cancelar</button>
-      <button class="action-button btn-add" id="btnSaveEdit">Salvar</button>
-    </div>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <h2 style="margin: 0;">Times Sorteados</h2>
+    <button id="btnCopyWhatsApp" class="action-button btn-copy">📋 Copiar para WhatsApp</button>
   </div>
+
+  <div id="teams"></div>
 </div>
 
-</div>
+<div id="toast" class="toast"></div>
 
-<script type="module" src="js/main.js"></script>
-<div id="toast" class="toast">Copiado para a área de transferência! ✅</div>
-
+<script type="module" defer src="js/main.js"></script>
 </body>
 </html>

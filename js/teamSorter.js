@@ -1,11 +1,8 @@
-// teams.js
+// teamSorter.js
+import { abreviacaoPosicao } from './playerManager.js';
 
-import { players, abreviacaoPosicao } from './players.js';
-
-export let teams = [];
-
-function embaralhar(array) {
-  for (let i = array.length -1; i > 0; i--) {
+export function embaralhar(array) {
+  for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
@@ -22,7 +19,6 @@ export function sortBalancedTeams(jogadores, tamanhoTime = 6) {
 
   const qtdTimes = Math.ceil(jogadores.length / tamanhoTime);
   const times = Array.from({ length: qtdTimes }, () => []);
-
   const posicaoPorTime = times.map(() => ({}));
 
   const ordemPos = ['goleiro', 'zagueiro', 'ala', 'meio', 'ataque'];
@@ -30,7 +26,6 @@ export function sortBalancedTeams(jogadores, tamanhoTime = 6) {
   ordemPos.forEach(posicao => {
     const grupo = grupos[posicao] || [];
     let i = 0;
-
     grupo.forEach(jogador => {
       let tentativas = 0;
       while (tentativas < qtdTimes) {
@@ -43,7 +38,6 @@ export function sortBalancedTeams(jogadores, tamanhoTime = 6) {
           posicaoPorTime[timeIndex][posicao] = posCount + 1;
           break;
         }
-
         i++;
         tentativas++;
       }
@@ -63,32 +57,27 @@ export function sortBalancedTeams(jogadores, tamanhoTime = 6) {
   return times;
 }
 
-export function sortPlayersGeneric(tamanhoTime = 7) {
-  if (players.length < 2) {
-    throw new Error('Adicione pelo menos dois jogadores.');
-  }
-
-  const isBalanceado = typeof players[0] === 'object' && 'posicao' in players[0];
+export function sortPlayersGeneric(players, tamanhoTime = 7) {
+  if (players.length < 2) throw new Error('Adicione pelo menos dois jogadores.');
 
   const shuffled = [...players];
   embaralhar(shuffled);
 
-  teams = [];
+  let teams = [];
 
-  if (isBalanceado) {
+  // assume players are objects with posicao
+  if (players.length > 0 && typeof players[0] === 'object' && 'posicao' in players[0]) {
     teams = sortBalancedTeams(shuffled, tamanhoTime);
   } else {
     while (shuffled.length) {
       teams.push(shuffled.splice(0, tamanhoTime));
     }
   }
-
   return teams;
 }
 
-export function displayTeams(teams, containerElement) {
-  containerElement.innerHTML = '';
-
+export function formatTeamsToHTML(teams) {
+  const teamsDiv = document.createElement('div');
   const ordem = ['goleiro', 'zagueiro', 'ala', 'meio', 'ataque'];
   const emoji = {
     goleiro: '🧤',
@@ -100,20 +89,45 @@ export function displayTeams(teams, containerElement) {
 
   teams.forEach((team, index) => {
     let teamHTML = `<h2>Time ${index + 1}</h2><ul>`;
-
-    const teamOrdenado = [...team].sort((a, b) => {
-      const posA = ordem.indexOf(a.posicao);
-      const posB = ordem.indexOf(b.posicao);
-      return posA - posB;
-    });
+    const teamOrdenado = [...team].sort((a, b) => ordem.indexOf(a.posicao) - ordem.indexOf(b.posicao));
 
     teamOrdenado.forEach(p => {
-      const posClass = `pos-${p.posicao}`;
       const simbolo = emoji[p.posicao] || '⚽';
-      teamHTML += `<li class="${posClass}">${simbolo} ${p.nome} (${abreviacaoPosicao(p.posicao)})</li>`;
+      teamHTML += `<li class="pos-${p.posicao}">${simbolo} ${p.nome} (${abreviacaoPosicao(p.posicao)})</li>`;
+    });
+    teamHTML += '</ul>';
+
+    const container = document.createElement('div');
+    container.innerHTML = teamHTML;
+    teamsDiv.appendChild(container);
+  });
+  return teamsDiv;
+}
+
+export function formatTeamsToWhatsAppText(teams) {
+  const ordem = ['goleiro', 'zagueiro', 'ala', 'meio', 'ataque'];
+  const emoji = {
+    goleiro: '🧤',
+    zagueiro: '🛡️',
+    ala: '🌀',
+    meio: '🎯',
+    ataque: '🔥'
+  };
+
+  let texto = '📋 *Times Sorteados*\n\n';
+
+  teams.forEach((team, index) => {
+    texto += `🏆 *Time ${index + 1}:*\n`;
+
+    const teamOrdenado = [...team].sort((a, b) => ordem.indexOf(a.posicao) - ordem.indexOf(b.posicao));
+
+    teamOrdenado.forEach(player => {
+      const simbolo = emoji[player.posicao] || '⚽';
+      texto += `${simbolo} ${player.nome} (${abreviacaoPosicao(player.posicao)})\n`;
     });
 
-    teamHTML += '</ul>';
-    containerElement.innerHTML += teamHTML;
+    texto += '\n';
   });
+
+  return texto;
 }
