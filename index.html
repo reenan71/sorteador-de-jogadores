@@ -30,7 +30,7 @@
     <option value="ataque">Ataque</option>
   </select>
 
-  <button class="btn-add action-button" onclick="addPlayer()">Adicionar Jogador</button>
+  <button class="btn-add action-button" id="btnAddPlayer">Adicionar Jogador</button>
 </div>
 
 <hr />
@@ -38,7 +38,7 @@
 <div>
   <label for="teamSize">Tamanho do time:</label>
   <input type="number" id="teamSize" min="2" max="11" value="7" />
-  <button class="btn-add action-button" onclick="sortPlayersGeneric(Number(document.getElementById('teamSize').value))">
+  <button class="btn-add action-button" id="btnSortTeams">
     Sortear Times
   </button>
 </div>
@@ -51,7 +51,7 @@
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
   <h2 style="margin: 0;">Times Sorteados</h2>
-  <button onclick="copiarTimesWhatsApp()" class="action-button btn-copy">
+  <button id="btnCopyWhatsApp" class="action-button btn-copy">
     📋 Copiar para WhatsApp
   </button>
 </div>
@@ -76,15 +76,15 @@
       <option value="ataque">Ataque</option>
     </select>
     <div class="modal-buttons">
-      <button class="btn-danger action-button" onclick="closeModal()">Cancelar</button>
-      <button class="action-button btn-add" onclick="saveEdit()">Salvar</button>
+      <button class="btn-danger action-button" id="btnCloseModal">Cancelar</button>
+      <button class="action-button btn-add" id="btnSaveEdit">Salvar</button>
     </div>
   </div>
 </div>
 
 </div>
 
-<script src="script.js"></script>
+<script type="module" src="js/main.js"></script>
 <div id="toast" class="toast">Copiado para a área de transferência! ✅</div>
 
 </body>
