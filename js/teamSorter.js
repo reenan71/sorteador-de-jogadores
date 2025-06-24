@@ -8,72 +8,85 @@ export function embaralhar(array) {
   }
 }
 
-export function sortBalancedTeams(jogadores, tamanhoTime = 6) {
-  const grupos = {};
-  jogadores.forEach(jogador => {
-    if (!grupos[jogador.posicao]) grupos[jogador.posicao] = [];
-    grupos[jogador.posicao].push(jogador);
+export function sortBalancedTeams(jogadores) {
+  const grupos = {
+    goleiro: [],
+    zagueiro: [],
+    ala: [],
+    meio: [],
+    ataque: []
+  };
+
+  jogadores.forEach(j => {
+    if (grupos[j.posicao]) grupos[j.posicao].push(j);
   });
 
-  Object.values(grupos).forEach(grupo => embaralhar(grupo));
+  Object.values(grupos).forEach(embaralhar);
 
-  const qtdTimes = Math.ceil(jogadores.length / tamanhoTime);
-  const times = Array.from({ length: qtdTimes }, () => []);
-  const posicaoPorTime = times.map(() => ({}));
+  const qtdTimes = Math.min(
+    grupos.goleiro.length,
+    grupos.zagueiro.length,
+    Math.floor(grupos.ala.length / 2),
+    Math.floor(grupos.meio.length / 2),
+    grupos.ataque.length
+  );
 
-  const ordemPos = ['goleiro', 'zagueiro', 'ala', 'meio', 'ataque'];
+  if (qtdTimes === 0) {
+    throw new Error('Não há jogadores suficientes para formar ao menos um time completo.');
+  }
 
-  ordemPos.forEach(posicao => {
-    const grupo = grupos[posicao] || [];
-    let i = 0;
-    grupo.forEach(jogador => {
-      let tentativas = 0;
-      while (tentativas < qtdTimes) {
-        const timeIndex = i % qtdTimes;
-        const time = times[timeIndex];
-        const posCount = posicaoPorTime[timeIndex][posicao] || 0;
+  const times = Array.from({ length: qtdTimes }, () => ({ titulares: [], reservas: [] }));
 
-        if (posCount === 0 || grupo.length < qtdTimes) {
-          time.push(jogador);
-          posicaoPorTime[timeIndex][posicao] = posCount + 1;
-          break;
-        }
-        i++;
-        tentativas++;
-      }
-      i++;
-    });
-  });
+  for (let i = 0; i < qtdTimes; i++) {
+    times[i].titulares.push(grupos.goleiro.pop());
+    times[i].titulares.push(grupos.zagueiro.pop());
+    times[i].titulares.push(grupos.ala.pop());
+    times[i].titulares.push(grupos.ala.pop());
+    times[i].titulares.push(grupos.meio.pop());
+    times[i].titulares.push(grupos.meio.pop());
+    times[i].titulares.push(grupos.ataque.pop());
+  }
 
-  const todos = Object.values(grupos).flat();
-  const usados = new Set(times.flat());
-  const faltando = todos.filter(j => !usados.has(j));
-  embaralhar(faltando);
-  faltando.forEach(jogador => {
-    const menor = times.reduce((a, b) => (a.length < b.length ? a : b));
-    menor.push(jogador);
+  // Reservas organizados por posição
+  const reservasPorPosicao = {
+    zagueiro: grupos.zagueiro,
+    ala: grupos.ala,
+    meio: grupos.meio,
+    ataque: grupos.ataque
+  };
+
+  const podeFormarTimeExtra =
+    reservasPorPosicao.zagueiro.length >= 1 &&
+    reservasPorPosicao.ala.length >= 2 &&
+    reservasPorPosicao.meio.length >= 2 &&
+    reservasPorPosicao.ataque.length >= 1;
+
+  if (podeFormarTimeExtra) {
+    const timeExtra = { titulares: [], reservas: [] };
+    timeExtra.titulares.push(reservasPorPosicao.zagueiro.pop());
+    timeExtra.titulares.push(reservasPorPosicao.ala.pop());
+    timeExtra.titulares.push(reservasPorPosicao.ala.pop());
+    timeExtra.titulares.push(reservasPorPosicao.meio.pop());
+    timeExtra.titulares.push(reservasPorPosicao.meio.pop());
+    timeExtra.titulares.push(reservasPorPosicao.ataque.pop());
+    times.push(timeExtra);
+  }
+
+  const restantes = Object.values(reservasPorPosicao).flat();
+  embaralhar(restantes);
+
+  let i = 0;
+  restantes.forEach(jogador => {
+    times[i % qtdTimes].reservas.push(jogador);
+    i++;
   });
 
   return times;
 }
 
-export function sortPlayersGeneric(players, tamanhoTime = 7) {
+export function sortPlayersGeneric(players) {
   if (players.length < 2) throw new Error('Adicione pelo menos dois jogadores.');
-
-  const shuffled = [...players];
-  embaralhar(shuffled);
-
-  let teams = [];
-
-  // assume players are objects with posicao
-  if (players.length > 0 && typeof players[0] === 'object' && 'posicao' in players[0]) {
-    teams = sortBalancedTeams(shuffled, tamanhoTime);
-  } else {
-    while (shuffled.length) {
-      teams.push(shuffled.splice(0, tamanhoTime));
-    }
-  }
-  return teams;
+  return sortBalancedTeams([...players]);
 }
 
 export function formatTeamsToHTML(teams) {
@@ -89,18 +102,29 @@ export function formatTeamsToHTML(teams) {
 
   teams.forEach((team, index) => {
     let teamHTML = `<h2>Time ${index + 1}</h2><ul>`;
-    const teamOrdenado = [...team].sort((a, b) => ordem.indexOf(a.posicao) - ordem.indexOf(b.posicao));
+    const titularesOrdenados = [...team.titulares].sort((a, b) => ordem.indexOf(a.posicao) - ordem.indexOf(b.posicao));
 
-    teamOrdenado.forEach(p => {
+    titularesOrdenados.forEach(p => {
       const simbolo = emoji[p.posicao] || '⚽';
       teamHTML += `<li class="pos-${p.posicao}">${simbolo} ${p.nome} (${abreviacaoPosicao(p.posicao)})</li>`;
     });
+
     teamHTML += '</ul>';
+
+    if (team.reservas.length > 0) {
+      teamHTML += `<strong>🔄 Reservas:</strong><ul>`;
+      team.reservas.forEach(p => {
+        const simbolo = emoji[p.posicao] || '⚽';
+        teamHTML += `<li class="pos-${p.posicao}">${simbolo} ${p.nome} (${abreviacaoPosicao(p.posicao)})</li>`;
+      });
+      teamHTML += '</ul>';
+    }
 
     const container = document.createElement('div');
     container.innerHTML = teamHTML;
     teamsDiv.appendChild(container);
   });
+
   return teamsDiv;
 }
 
@@ -114,17 +138,24 @@ export function formatTeamsToWhatsAppText(teams) {
     ataque: '🔥'
   };
 
-  let texto = '📋 *Times Sorteados*\n\n';
+  let texto = '📋 *Times Sorteados*';
 
   teams.forEach((team, index) => {
-    texto += `🏆 *Time ${index + 1}:*\n`;
+    texto += `🏆 *Time ${index + 1}:*`;
 
-    const teamOrdenado = [...team].sort((a, b) => ordem.indexOf(a.posicao) - ordem.indexOf(b.posicao));
-
-    teamOrdenado.forEach(player => {
+    const titularesOrdenados = [...team.titulares].sort((a, b) => ordem.indexOf(a.posicao) - ordem.indexOf(b.posicao));
+    titularesOrdenados.forEach(player => {
       const simbolo = emoji[player.posicao] || '⚽';
-      texto += `${simbolo} ${player.nome} (${abreviacaoPosicao(player.posicao)})\n`;
+      texto += `${simbolo} ${player.nome} (${abreviacaoPosicao(player.posicao)})`;
     });
+
+    if (team.reservas.length > 0) {
+      texto += `🔄 *Reservas:*`;
+      team.reservas.forEach(player => {
+        const simbolo = emoji[player.posicao] || '⚽';
+        texto += `${simbolo} ${player.nome} (${abreviacaoPosicao(player.posicao)})`;
+      });
+    }
 
     texto += '\n';
   });
