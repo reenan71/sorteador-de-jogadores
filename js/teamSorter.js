@@ -138,27 +138,27 @@ export function formatTeamsToWhatsAppText(teams) {
     ataque: '🔥'
   };
 
-  let texto = '📋 *Times Sorteados*';
+  let texto = '📋 *Times Sorteados*\n\n';
 
-  teams.forEach((team, index) => {
-    texto += `🏆 *Time ${index + 1}:*`;
+teams.forEach((team, index) => {
+  texto += `🏆 *Time ${index + 1}:*\n`;
 
-    const titularesOrdenados = [...team.titulares].sort((a, b) => ordem.indexOf(a.posicao) - ordem.indexOf(b.posicao));
-    titularesOrdenados.forEach(player => {
-      const simbolo = emoji[player.posicao] || '⚽';
-      texto += `${simbolo} ${player.nome} (${abreviacaoPosicao(player.posicao)})`;
-    });
-
-    if (team.reservas.length > 0) {
-      texto += `🔄 *Reservas:*`;
-      team.reservas.forEach(player => {
-        const simbolo = emoji[player.posicao] || '⚽';
-        texto += `${simbolo} ${player.nome} (${abreviacaoPosicao(player.posicao)})`;
-      });
-    }
-
-    texto += '\n';
+  const titularesOrdenados = [...team.titulares].sort((a, b) => ordem.indexOf(a.posicao) - ordem.indexOf(b.posicao));
+  titularesOrdenados.forEach(player => {
+    const simbolo = emoji[player.posicao] || '⚽';
+    texto += `${simbolo} ${player.nome} (${abreviacaoPosicao(player.posicao)})\n`;
   });
+
+  if (team.reservas.length > 0) {
+    texto += `\n🔄 *Reservas:*\n`;
+    team.reservas.forEach(player => {
+      const simbolo = emoji[player.posicao] || '⚽';
+      texto += `${simbolo} ${player.nome} (${abreviacaoPosicao(player.posicao)})\n`;
+    });
+  }
+
+  texto += `\n`;
+});
 
   return texto;
 }
